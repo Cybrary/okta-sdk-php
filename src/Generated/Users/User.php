@@ -60,7 +60,7 @@ class User extends \Okta\Resource\AbstractResource
                         "/users"
                     );
     }
-        
+
     public function save()
     {
         return \Okta\Client::getInstance()
@@ -81,7 +81,7 @@ class User extends \Okta\Resource\AbstractResource
                     $this
                 );
     }
-        
+
     /**
      * Get the id.
      *
@@ -149,7 +149,7 @@ class User extends \Okta\Resource\AbstractResource
             self::PROFILE,
             $profile
         );
-        
+
         return $this;
     }
 
@@ -210,7 +210,7 @@ class User extends \Okta\Resource\AbstractResource
             self::CREDENTIALS,
             $credentials
         );
-        
+
         return $this;
     }
 
@@ -436,7 +436,7 @@ class User extends \Okta\Resource\AbstractResource
 
 
     /**
-    * 
+    *
     *
     *
     * @return mixed|null
@@ -456,7 +456,7 @@ class User extends \Okta\Resource\AbstractResource
 
 
     /**
-    * 
+    *
     *
     *
     * @return mixed|null
@@ -534,6 +534,24 @@ class User extends \Okta\Resource\AbstractResource
         return $body;
     }
 
+    /**
+    * Activates a user.  This operation can only be performed on users with a &#x60;STAGED&#x60; status.  Activation of a user is an asynchronous operation.  The user will have the &#x60;transitioningToStatus&#x60; property with a value of &#x60;ACTIVE&#x60; during activation to indicate that the user hasn&#x27;t completed the asynchronous operation.  The user will have a status of &#x60;ACTIVE&#x60; when the activation process is complete.
+    *
+    * @param bool $sendEmail Sets the sendEmail flag.
+    * @return mixed|null
+    */
+    public function reactivate($sendEmail = true)
+    {
+        $uri = "/api/v1/users/{$this->getId()}/lifecycle/reactivate";
+        $uri = $this->getDataStore()->buildUri(
+            $this->getDataStore()->getOrganizationUrl() . $uri
+        );
+        $body = $this
+                ->getDataStore()
+                ->executeRequest('POST', $uri, '', ['query' => ['sendEmail' => $sendEmail]]);
+
+        return new \Okta\Users\UserActivationToken(null, $body);
+    }
 
     /**
     * Suspends a user.  This operation can only be performed on users with an &#x60;ACTIVE&#x60; status.  The user will have a status of &#x60;SUSPENDED&#x60; when the process is complete.

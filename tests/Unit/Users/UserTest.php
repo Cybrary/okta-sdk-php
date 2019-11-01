@@ -701,7 +701,7 @@ class UserTest extends BaseUnitTestCase
             $request[0]->getUri()->getPath()
         );
     }
-    
+
     /** @test */
     public function a_user_can_request_a_password_change()
     {
@@ -738,6 +738,7 @@ class UserTest extends BaseUnitTestCase
         $user = $this->createNewUser();
 
         $user->resetPassword();
+        $user->resetPassword(false);
 
         $request = $httpClient->getRequests();
 
@@ -747,8 +748,18 @@ class UserTest extends BaseUnitTestCase
             $request[0]->getUri()->getPath()
         );
         $this->assertEquals(
-            '',
+            'sendEmail=true',
             $request[0]->getUri()->getQuery()
+        );
+
+        $this->assertEquals('POST', $request[1]->getMethod());
+        $this->assertEquals(
+            "/api/v1/users/{$user->getId()}/lifecycle/reset_password",
+            $request[1]->getUri()->getPath()
+        );
+        $this->assertEquals(
+            'sendEmail=false',
+            $request[1]->getUri()->getQuery()
         );
 
     }

@@ -599,7 +599,7 @@ class User extends \Okta\Resource\AbstractResource
     *
     * @return mixed|null
     */
-    public function resetPassword()
+    public function resetPassword($sendEmail = true)
     {
         $uri = "/api/v1/users/{$this->getId()}/lifecycle/reset_password";
         $uri = $this->getDataStore()->buildUri(
@@ -607,7 +607,7 @@ class User extends \Okta\Resource\AbstractResource
         );
         $body = $this
                 ->getDataStore()
-                ->executeRequest('POST', $uri);
+                ->executeRequest('POST', $uri,'', ['query' => ['sendEmail' => $sendEmail]]);
 
         return new \Okta\Users\ResetPasswordToken(null, $body);
     }

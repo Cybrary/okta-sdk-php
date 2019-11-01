@@ -33,4 +33,21 @@ class ResetPasswordToken extends \Okta\Resource\AbstractResource
     {
         return $this->getProperty(self::RESET_PASSWORD_URL);
     }
+
+    /**
+     * Get the reset password token
+     * @method getResetPasswordToken
+     * @author PA
+     * @date   2019-11-01
+     */
+    public function getResetPasswordToken()
+    {
+        $url = $this->getProperty(self::RESET_PASSWORD_URL);
+        
+        if (!$url) {
+            return '';
+        }
+        $parts = explode('/reset_password/', $url);
+        return $parts[1];
+    }
 }
